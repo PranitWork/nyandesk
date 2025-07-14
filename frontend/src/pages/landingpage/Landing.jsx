@@ -1,7 +1,11 @@
+import Navigation from "../../components/landingComp/Navigation"
 
 const Landing = () => {
   return (
-    <div >Landing</div>
+    <main className="w-full">
+    <Navigation/>
+    <div>Landing</div>
+    </main>
   )
 }
 
