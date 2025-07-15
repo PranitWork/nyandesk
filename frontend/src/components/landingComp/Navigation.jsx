@@ -15,7 +15,7 @@ const Navigation = () => {
         {/* Desktop Nav */}
         <ul className="hidden md:flex items-center space-x-6">
           <li>
-            <NavLink to="" className="text-white hover:text-gray-300">
+            <NavLink to="/" className="text-white hover:text-gray-300">
               Home
             </NavLink>
           </li>
