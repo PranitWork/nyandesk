@@ -1,28 +1,30 @@
-// jobService.js
+// services/jobService.js
+const axios = require("axios");
 
 async function jobfetch({ query = "", location = "", page = 1 } = {}) {
   const baseUrl = "https://api.adzuna.com/v1/api/jobs/in/search";
   const appId = process.env.ADZUNA_APP_ID;
   const appKey = process.env.ADZUNA_APP_KEY;
 
-  const url = new URL(`${baseUrl}/${page}`);
-  url.searchParams.append("app_id", appId);
-  url.searchParams.append("app_key", appKey);
-  if (query) url.searchParams.append("what", query);
-  if (location) url.searchParams.append("where", location);
-  url.searchParams.append("results_per_page", "20");
-  url.searchParams.append("sort_by", "date");
+  const url = `${baseUrl}/${page}`;
+
+  const params = {
+    app_id: appId,
+    app_key: appKey,
+    results_per_page: 20,
+    sort_by: "date",
+  };
+
+  if (query) params.what = query;
+  if (location) params.where = location;
 
   try {
-    const res = await fetch(url.href);
-    if (!res.ok) throw new Error(`API request failed: ${res.status}`);
-    const data = await res.json();
-    return data.results;
+    const { data } = await axios.get(url, { params });
+    return data.results; // array of job postings
   } catch (err) {
-    console.error("Error fetching jobs:", err.message);
-    throw err;
+    console.error("Error fetching jobs:", err.response?.data || err.message);
+    throw new Error("Failed to fetch jobs");
   }
 }
-
 
 module.exports = { jobfetch };

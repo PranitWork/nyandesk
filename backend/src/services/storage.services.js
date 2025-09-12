@@ -9,11 +9,18 @@ const imagekit = new ImageKit({
 
 
 async function uploadImage(file,fileName){
+    try{
+
+    
     const response = await imagekit.upload({
         file:file,
         fileName:fileName,
         folder:"/nyandesk/users",
     })
+    return response.url;
+    }catch(err){
+        throw new error("Image upload failed:", err);
+    }
 }
 
 module.exports = uploadImage;

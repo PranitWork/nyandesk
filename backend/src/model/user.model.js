@@ -51,7 +51,35 @@ const userSchema = new mongoose.Schema({
   resume:{
     type: String,
     default: "",
+  },
+  resumeReports: [
+  {
+  date: { type: Date, default: Date.now },
+    resumescore: Number,
+    tips: [String]
   }
+],
+resumeData: {
+  rawText: { type: String, default: "" },        // full text from parser
+  skills: { type: [String], default: [] },
+  education: [
+    {
+      degree: String,
+      institution: String,
+      year: String
+    }
+  ],
+  experience: [
+    {
+      company: String,
+      position: String,
+      start: String,
+      end: String,
+      description: String
+    }
+  ],
+  lastParsedAt: { type: Date }
+}
 },{
   timestamps: true,
 });
