@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const authRoutes= require("./routes/auth.routes")
 const userRoutes = require("./routes/user.routes")
 const jobsRoutes= require("./routes/jobs.routes")
-const resumeRoutes=  require("./routes/resume.routes")
+const atsRoutes=  require("./routes/ats.routes")
 
 const app = express();
 app.use(express.json());
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobsRoutes);
-app.use("/api/resume", resumeRoutes);
+app.use("/api/resume", atsRoutes);
 
 
 module.exports = app;

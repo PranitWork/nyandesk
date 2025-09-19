@@ -1,30 +1,40 @@
+import { useState } from "react";
+import Atschecker from "../../components/dashboardComp/Atschecker"
+import Header from "../../components/dashboardComp/Header"
+import LeftSidePannel from "../../components/dashboardComp/leftSidePannel"
+import JobsInfo from "../../components/dashboardComp/JobsInfo";
+
 
 const Dashboard = () => {
+  const [activeItem, setactiveItem] = useState("Dashboard");
+  const renderComponents= ()=>{
+    switch(activeItem){
+      case "ATS Checker":
+        return <Atschecker/>;
+      case "Dashboard":
+        return "dashboard";
+      case "Jobs":
+        return <JobsInfo/>;
+      case "Chat With AI":
+        return "chat with ai";
+      case "Profile":
+        return "profile";
+      case "Logout":
+        return "logout";
+      default:
+        return "dashboard";
+    }
+  }
   return (
     <>
-    <main className="w-full flex bg-[#EEEEEE] min-h-[100vh]">
-      <div className="leftside w-[20%]  bg-white py-3 ">
-        <h1 className="text-[30px] font-bold px-3">Nyandesk</h1>
-        <div className="left-tabs h-[75%] overflow-y-auto flex flex-col items-start mt-10  gap-2">
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">DashBoard</button>
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">ATS Checker</button>
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">Jobs</button>
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">Interview Prepration</button>
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">Suggestions</button>
-
-        </div>
-        <div className="left-tabs  flex flex-col items-start   gap-2">
-                    <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">Profile</button>
-          <button className="cursor-pointer py-[6px] bg-[#eeeeee] w-full text-left pl-5">Settings</button>
-        </div>
+    <main >
+      <Header/>
+      <div className="w-full flex items-center justify-start">
+        <LeftSidePannel activeItem={activeItem} setActiveItem={setactiveItem}/>
+        {renderComponents()}
       </div>
-        <div className="dashboardTop bg-white flex items-center justify-end px-10 w-[80%] h-[50px]
-">
-          <img className="w-[25px] h-[25px] rounded-full mr-3 bg-red-400" src="" alt="" />
-          <p className="text-[13px]">Hey Pranit...👋😊</p>
-        </div>
     </main>
-    </>
+    </> 
   )
 }
 

@@ -79,7 +79,10 @@ resumeData: {
     }
   ],
   lastParsedAt: { type: Date }
-}
+},
+atsScore: { type: Number, default: 0 },
+atsSuggestions: { type: [String], default: [] }
+
 },{
   timestamps: true,
 });

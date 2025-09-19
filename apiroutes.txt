@@ -1,0 +1,14 @@
+
+
+api routes
+
+POST = http://localhost:4000/api/auth/login
+POSt = http://localhost:4000/api/auth/register
+
+POST = http://localhost:4000/api/user/profile
+PATCH = http://localhost:4000/api/user/profile
+
+get = http://localhost:4000/api/jobs/all
+get = http://localhost:4000/api/jobs/recommend
+
+POST = http://localhost:4000/api/resume/upload
