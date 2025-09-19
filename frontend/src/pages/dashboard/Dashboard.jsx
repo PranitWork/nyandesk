@@ -1,41 +1,44 @@
 import { useState } from "react";
-import Atschecker from "../../components/dashboardComp/Atschecker"
-import Header from "../../components/dashboardComp/Header"
-import LeftSidePannel from "../../components/dashboardComp/leftSidePannel"
+import Atschecker from "../../components/dashboardComp/Atschecker";
+import Header from "../../components/dashboardComp/Header";
+import LeftSidePannel from "../../components/dashboardComp/LeftSidePannel";
 import JobsInfo from "../../components/dashboardComp/JobsInfo";
-
+import UserProfile from "../../components/dashboardComp/UserProfile";
+import Logout from "../../components/dashboardComp/Logout";
 
 const Dashboard = () => {
-  const [activeItem, setactiveItem] = useState("Dashboard");
-  const renderComponents= ()=>{
-    switch(activeItem){
+  const [activeItem, setActiveItem] = useState("Dashboard");
+
+  const renderComponents = () => {
+    switch (activeItem) {
       case "ATS Checker":
-        return <Atschecker/>;
+        return <Atschecker />;
       case "Dashboard":
-        return "dashboard";
+        return <div className="p-4">dashboard</div>;
       case "Jobs":
-        return <JobsInfo/>;
+        return <JobsInfo />;
       case "Chat With AI":
-        return "chat with ai";
+        return <div className="p-4">chat with ai</div>;
       case "Profile":
-        return "profile";
+        return <UserProfile />;
       case "Logout":
-        return "logout";
+        return <Logout/>;
       default:
-        return "dashboard";
+        return <div className="p-4">dashboard</div>;
     }
-  }
+  };
+
   return (
-    <>
-    <main >
-      <Header/>
-      <div className="w-full flex items-center justify-start">
-        <LeftSidePannel activeItem={activeItem} setActiveItem={setactiveItem}/>
-        {renderComponents()}
+    <main className="min-h-screen flex flex-col">
+      <Header />
+
+      <div className="flex flex-1">
+        <LeftSidePannel activeItem={activeItem} setActiveItem={setActiveItem} />
+
+        <div className="flex-1 overflow-y-auto">{renderComponents()}</div>
       </div>
     </main>
-    </> 
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

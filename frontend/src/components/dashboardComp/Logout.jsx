@@ -1,0 +1,39 @@
+import React from 'react'
+
+const Logout = () => {
+  return (
+     <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+      <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
+        {/* Profile Image */}
+        <div className="flex flex-col items-center">
+          <img
+            src="https://via.placeholder.com/100"
+            alt="User Profile"
+            className="w-24 h-24 rounded-full border-4 border-gray-200 shadow-md"
+          />
+          <h2 className="mt-4 text-xl font-semibold text-gray-800">
+            John Doe
+          </h2>
+        </div>
+
+        {/* Logout Confirmation Box */}
+        <div className="mt-6 p-4 bg-gray-50 rounded-xl shadow-inner">
+          <p className="text-gray-700 font-medium">
+            Do you really want to logout?
+          </p>
+
+          <div className="flex justify-center gap-4 mt-6">
+            <button className="px-5 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition">
+              Yes
+            </button>
+            <button className="px-5 py-2 cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg shadow transition">
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Logout

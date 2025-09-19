@@ -12,7 +12,7 @@ export default function ResumeUploadForm() {
   };
 
   return (
-    <div className="w-full flex flex-col items-center px-4 py-6">
+    <div className="w-full bg-gray-50 flex flex-col items-center px-4 py-6">
       <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-center tracking-tighter">
         Check Your Resume Score
       </h2>

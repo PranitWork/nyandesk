@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { MdDashboard } from "react-icons/md";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 
-const LeftSidePannel = ({activeItem, setActiveItem}) => {
+const LeftSidePannel = ({ activeItem, setActiveItem }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
@@ -12,10 +12,7 @@ const LeftSidePannel = ({activeItem, setActiveItem}) => {
     { label: "Chat With AI" },
   ];
 
-  const bottomItems = [
-    { label: "Profile" },
-    { label: "Logout", danger: true },
-  ];
+  const bottomItems = [{ label: "Profile" }, { label: "Logout", danger: true }];
 
   const baseClass =
     "flex w-full py-2 mb-1 cursor-pointer px-4 items-center bg-white hover:bg-gray-300 transition-colors duration-200 text-sm sm:text-base";
@@ -25,7 +22,17 @@ const LeftSidePannel = ({activeItem, setActiveItem}) => {
   return (
     <>
       {isOpen && (
-        <div className="fixed sm:relative top-0 left-0 h-screen w-64 sm:w-1/4 md:w-1/5 flex flex-col items-center justify-between bg-white shadow-md py-4 transition-all duration-300 z-50">
+        <div
+          className="
+             fixed top-[55px] left-0 h-[calc(103vh-64px)]   // 👈 sidebar starts below header
+    sm:relative sm:top-0 sm:h-auto
+    w-64 sm:w-1/4 md:w-1/5
+    flex flex-col justify-between 
+    bg-white shadow-md py-4 
+    transition-all duration-300
+    z-40
+          "
+        >
           {/* Collapse button */}
           <div
             className="absolute top-2 right-[-12px] sm:right-[-16px] rounded-full border bg-white cursor-pointer text-blue-500 p-1 shadow"
@@ -35,7 +42,7 @@ const LeftSidePannel = ({activeItem, setActiveItem}) => {
           </div>
 
           {/* Top menu */}
-          <div className="w-full flex-1 overflow-y-auto px-1">
+          <div className="w-full flex-1 overflow-y-auto px-2">
             {menuItems.map((item) => (
               <button
                 key={item.label}
@@ -54,7 +61,7 @@ const LeftSidePannel = ({activeItem, setActiveItem}) => {
           </div>
 
           {/* Bottom menu */}
-          <div className="w-full px-1 pb-2">
+          <div className="w-full px-2 pb-2">
             {bottomItems.map((item) => (
               <button
                 key={item.label}
