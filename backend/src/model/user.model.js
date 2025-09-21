@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
-  Experiance: {
+  Experience: {
     type: String,
     default: "",
   },

@@ -1,18 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FaCamera, FaTimes } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { asyncUserProfileUpdate } from "../../store/actions/userActions";
+import { toast } from "react-toastify";
 
 function UserProfile() {
   const { register, handleSubmit, setValue } = useForm();
-  const [profilePic, setProfilePic] = useState(null);
+  const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [skills, setSkills] = useState([]);
   const [skillInput, setSkillInput] = useState("");
+const [profilePicFile, setProfilePicFile] = useState(null);
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.userReduce.users);
+
+  useEffect(() => {
+    if (userData) {
+      setValue("name", userData.name || "");
+      setValue("email", userData.email || "");
+      setValue("username", userData.username || "");
+      setValue("phone", userData.phone || "");
+      setValue("CityPreference", userData.CityPreference || "");
+      setValue("JobPreference", userData.JobPreference || "");
+      setValue("JobTitle", userData.JobTitle || "");
+      setValue("Experience", userData.Experience || userData.Experiance || "");
+
+      // Fix skills if stored as single string
+      let fixedSkills = [];
+      if (Array.isArray(userData.Skills)) {
+        if (userData.Skills.length === 1 && userData.Skills[0].includes(",")) {
+          fixedSkills = userData.Skills[0].split(",").map((s) => s.trim());
+        } else {
+          fixedSkills = userData.Skills;
+        }
+      }
+      setSkills(fixedSkills);
+      setValue("skills", fixedSkills);
+    }
+  }, [userData, setValue]);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setProfilePic(URL.createObjectURL(file));
-      setValue("profilePic", file); 
+      setProfilePicPreview(URL.createObjectURL(file));
+      setProfilePicFile(file)
+      setValue("profilePic", e.target.files); // save FileList for FormData
     }
   };
 
@@ -22,7 +54,7 @@ function UserProfile() {
       if (!skills.includes(skillInput.trim())) {
         const newSkills = [...skills, skillInput.trim()];
         setSkills(newSkills);
-        setValue("skills", newSkills); 
+        setValue("skills", newSkills);
       }
       setSkillInput("");
     }
@@ -31,30 +63,62 @@ function UserProfile() {
   const removeSkill = (skill) => {
     const newSkills = skills.filter((s) => s !== skill);
     setSkills(newSkills);
-    setValue("skills", newSkills); 
+    setValue("skills", newSkills);
   };
 
-  const onSubmit = (data) => {
-    data.skills = skills; 
-    console.log("Form Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const formData = new FormData();
 
-    // Example: send to backend
-    // const formData = new FormData();
-    // Object.entries(data).forEach(([key, value]) => {
-    //   formData.append(key, value);
-    // });
-    // axios.post("/api/profile", formData)
+      // Basic fields
+      console.log(data)
+      formData.append("name", data.name);
+      formData.append("email", data.email);
+      formData.append("username", data.username);
+      formData.append("phone", data.phone);
+      formData.append("CityPreference", data.CityPreference);
+      formData.append("JobPreference", data.JobPreference);
+      formData.append("JobTitle", data.JobTitle);
+      formData.append("Experience", data.Experience);
+
+      // Skills
+      if (skills.length > 0) {
+        formData.append("Skills", skills.join(","));
+      }
+
+      // Files
+      if (profilePicFile) {
+        formData.append("profilePic", profilePicFile);
+      }
+      console.log(data.profilePic)
+      if (data.resume && data.resume[0]) {
+        formData.append("resume", data.resume[0]);
+      }
+      console.log(data.resume)
+
+      // Dispatch Redux action
+      const response = await dispatch(asyncUserProfileUpdate(formData));
+      console.log(response)
+      if (response.sucess) {
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    } catch (error) {
+      toast.error("Something went wrong while updating profile.", error);
+      console.error(error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-gray-50 w-full flex items-center justify-center p-6">
-      <div className="w-full max-w-4xl bg-white shadow-xl/20 rounded-2xl overflow-hidden">
+      <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl overflow-hidden">
         {/* Header Section */}
         <div className="bg-blue-500 h-32 relative flex items-center justify-center">
           <div className="absolute -bottom-12">
             <div className="relative">
               <img
-                src={profilePic || "https://via.placeholder.com/150"}
+                src={profilePicPreview || userData.profilePic || null}
                 alt="Profile"
                 className="w-32 h-32 rounded-full border-4 bg-white border-white object-cover"
               />
@@ -69,7 +133,6 @@ function UserProfile() {
                 type="file"
                 className="hidden"
                 accept="image/*"
-                {...register("profilePic")}
                 onChange={handleImageUpload}
               />
             </div>
@@ -85,9 +148,11 @@ function UserProfile() {
           >
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
+              <label className="block text-sm font-medium mb-1">
+                Full Name
+              </label>
               <input
-                {...register("fullName")}
+                {...register("name")}
                 type="text"
                 placeholder="Enter Full Name"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
@@ -116,11 +181,9 @@ function UserProfile() {
               />
             </div>
 
-            {/* Phone Number */}
+            {/* Phone */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Phone Number
-              </label>
+              <label className="block text-sm font-medium mb-1">Phone</label>
               <input
                 {...register("phone")}
                 type="text"
@@ -135,7 +198,7 @@ function UserProfile() {
                 City Preference
               </label>
               <input
-                {...register("cityPreference")}
+                {...register("CityPreference")}
                 type="text"
                 placeholder="Enter City Preference"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
@@ -148,7 +211,7 @@ function UserProfile() {
                 Job Preference
               </label>
               <input
-                {...register("jobPreference")}
+                {...register("JobPreference")}
                 type="text"
                 placeholder="Enter Job Preference"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
@@ -157,9 +220,11 @@ function UserProfile() {
 
             {/* Job Title */}
             <div>
-              <label className="block text-sm font-medium mb-1">Job Title</label>
+              <label className="block text-sm font-medium mb-1">
+                Job Title
+              </label>
               <input
-                {...register("jobTitle")}
+                {...register("JobTitle")}
                 type="text"
                 placeholder="Job Title"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
@@ -168,11 +233,14 @@ function UserProfile() {
 
             {/* Experience */}
             <div>
-              <label className="block text-sm font-medium mb-1">Experience</label>
+              <label className="block text-sm font-medium mb-1">
+                Experience
+              </label>
               <select
-                {...register("experience")}
+                {...register("Experience")}
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               >
+                <option value="">Select</option>
                 <option>Fresher</option>
                 <option>Less than 1 Year</option>
                 <option>1 Year +</option>
@@ -215,6 +283,16 @@ function UserProfile() {
             {/* Resume */}
             <div className="md:col-span-2">
               <label className="block text-sm font-medium mb-1">Resume</label>
+              {userData.resume && (
+                <a
+                  href={userData.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 underline text-sm mb-2 block"
+                >
+                  View Current Resume
+                </a>
+              )}
               <input
                 {...register("resume")}
                 type="file"

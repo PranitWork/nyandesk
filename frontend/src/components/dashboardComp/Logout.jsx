@@ -1,6 +1,25 @@
 import React from 'react'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+import { asynclogoutUser } from '../../store/actions/userActions';
+import { toast } from 'react-toastify';
 
 const Logout = () => {
+  const dispatch = useDispatch();
+  const navigate= useNavigate();
+ const userLogOut = async () => {
+  const response = await dispatch(asynclogoutUser());
+  if (response.success) {
+    toast.success("User logged out");
+    navigate("/login");
+  } else {
+    toast.error(response.message || "Logout failed");
+  }
+};
+
+  const userNavigate = ()=>{
+    navigate("/dashboard");
+  }
   return (
      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
@@ -23,10 +42,10 @@ const Logout = () => {
           </p>
 
           <div className="flex justify-center gap-4 mt-6">
-            <button className="px-5 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition">
+            <button onClick={userLogOut} className="px-5 py-2 cursor-pointer bg-red-500 hover:bg-red-600 text-white rounded-lg shadow transition">
               Yes
             </button>
-            <button className="px-5 py-2 cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg shadow transition">
+            <button onClick={userNavigate} className="px-5 py-2 cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg shadow transition">
               No
             </button>
           </div>

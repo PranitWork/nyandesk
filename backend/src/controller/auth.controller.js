@@ -6,7 +6,7 @@ async function Register(req, res) {
   const { name, username, email, password } = req.body;
 
   if (!name || !username || !email || !password) {
-    return res.status(400).json({ msg: "Please enter all fields" });
+    return res.status(400).json({ message: "Please enter all fields" });
   }
 
   try {
@@ -16,7 +16,7 @@ async function Register(req, res) {
     });
 
     if (existingUser) {
-      return res.status(400).json({ msg: "User already exists" });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,13 +39,13 @@ async function Register(req, res) {
     });
 
     return res.status(201).json({
-      msg: "User registered successfully",
+      message: "User registered successfully",
       user: newUser,
       token,
     });
   } catch (err) {
     console.error("Register Error:", err);
-    return res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 }
 
@@ -58,27 +58,27 @@ async function Login(req, res){
     if (existingToken) {
       try {
         jwt.verify(existingToken, process.env.JWT_SECRET);
-        return res.status(200).json({ msg: "User already logged in" });
+        return res.status(200).json({ message: "User already logged in" });
       } catch {
-        return res.status(400).json({ msg: "Invalid token, please log in again" });
+        return res.status(400).json({ message: "Invalid token, please log in again" });
     }
     }
 
     // 2️⃣ Validate input
     if (!email || !password) {
-      return res.status(400).json({ msg: "Please enter all fields" });
+      return res.status(400).json({ message: "Please enter all fields" });
     }
 
     // 3️⃣ Find user
     const user = await userModel.findOne({ email }).select("+password");
     if (!user) {
-      return res.status(400).json({ msg: "User does not exist" });
+      return res.status(400).json({ message: "User does not exist" });
     }
 
     // 4️⃣ Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ msg: "Invalid credentials" });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // 5️⃣ Sign token
@@ -97,23 +97,39 @@ async function Login(req, res){
     const { password: _, ...safeUser } = user.toObject();
 
     return res.status(200).json({
-      msg: "User logged in successfully",
+      message: "User logged in successfully",
       user: safeUser,
       token,
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "Server error" });
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
-async function LogOut(req,res){
-    try{
-        cookies.remove("token");
-        return res.status(200).json({msg:"User logged out successfully"});
-    }catch(err){
-        return res.status(500).json({msg:"Server error"});
-    }
+async function LogOut(req, res) {
+  try {
+    // clear the cookie in browser
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+    });
+
+    return res.status(200).json({ message: "User logged out successfully" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
 }
 
-module.exports = {Register,Login,LogOut};
+
+async function currentUser(req,res){
+   res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+}
+
+
+module.exports = {Register,Login,LogOut,currentUser};
