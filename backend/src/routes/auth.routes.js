@@ -10,5 +10,9 @@ router.post("/login",Login);
 router.post("/logout",isUserExists,LogOut);
 router.get("/current-user", isUserExists, currentUser);
 
+router.get("/me", isUserExists, (req, res) => {
+  res.json({ user: req.user }); 
+});
+
 
 module.exports = router;

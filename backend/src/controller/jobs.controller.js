@@ -1,27 +1,29 @@
-const { jobfetch } = require( "../api/jobapi.services");
+const { jobfetch } = require("../api/jobapi.services");
 const userModel = require("../model/user.model");
 const { jobRecommendation } = require("../services/recommendation.service");
 
+// Helper to normalize page number
+function parsePage(page) {
+  const p = parseInt(page, 10);
+  return isNaN(p) || p < 1 ? 1 : p;
+}
 
-
+// GET jobs with pagination
 async function getjobs(req, res) {
   try {
     const query = req.query.query || "";
     const location = req.query.location || "";
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 20; // default 20 per page
+    const page = parsePage(req.query.page);
 
     const jobs = await jobfetch({ query, location, page });
-
-    // Adzuna already supports `results_per_page`, so slice if needed
-    const paginated = jobs.slice(0, limit);
 
     res.status(200).json({
       success: true,
       page,
-      limit,
-      count: paginated.length,
-      results: paginated,
+      count: jobs.length,
+      results: jobs,
+      hasNextPage: jobs.length === 50, // Adzuna max 50 per page
+      nextPage: jobs.length === 50 ? page + 1 : null,
     });
   } catch (err) {
     console.error("Error fetching jobs:", err);
@@ -29,27 +31,50 @@ async function getjobs(req, res) {
   }
 }
 
-// controller/jobs.controller.js
+// GET recommended jobs with pagination
 async function recommendJobs(req, res) {
   try {
     const userId = req.user.id;
     const user = await userModel.findById(userId);
-
     if (!user) return res.status(404).json({ error: "User not found" });
 
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
+    const page = parsePage(req.query.page);
+    const jobs = await jobRecommendation(user, { page });
 
-    const jobs = await jobRecommendation(user, { page, limit });
-
-    return res.json({ success: true, page, limit, count: jobs.length, results: jobs });
+    res.status(200).json({
+      success: true,
+      page,
+      count: jobs.length,
+      results: jobs,
+      hasNextPage: jobs.length === 50,
+      nextPage: jobs.length === 50 ? page + 1 : null,
+    });
   } catch (err) {
     console.error("Error recommending jobs:", err);
     res.status(500).json({ error: "Failed to fetch job recommendations" });
   }
 }
 
+// POST search jobs with pagination
+async function searchJobs(req, res) {
+  try {
+    const { jobTitle, location, page } = req.body;
+    const currentPage = parsePage(page);
 
+    const jobs = await jobfetch({ query: jobTitle, location, page: currentPage });
 
+    res.status(200).json({
+      success: true,
+      page: currentPage,
+      count: jobs.length,
+      results: jobs,
+      hasNextPage: jobs.length === 50,
+      nextPage: jobs.length === 50 ? currentPage + 1 : null,
+    });
+  } catch (err) {
+    console.error("Error searching jobs:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+}
 
-module.exports={getjobs, recommendJobs};
+module.exports = { searchJobs, getjobs, recommendJobs };

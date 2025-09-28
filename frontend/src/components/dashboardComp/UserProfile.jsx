@@ -6,13 +6,19 @@ import { asyncUserProfileUpdate } from "../../store/actions/userActions";
 import { toast } from "react-toastify";
 
 function UserProfile() {
-  const { register, handleSubmit, setValue } = useForm();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
+
   const [profilePicPreview, setProfilePicPreview] = useState(null);
   const [skills, setSkills] = useState([]);
   const [skillInput, setSkillInput] = useState("");
-const [profilePicFile, setProfilePicFile] = useState(null);
+  const [profilePicFile, setProfilePicFile] = useState(null);
   const dispatch = useDispatch();
-  const userData = useSelector((state) => state.userReduce.users);
+  const userData = useSelector((state) => state.userReducer.users);
 
   useEffect(() => {
     if (userData) {
@@ -43,7 +49,7 @@ const [profilePicFile, setProfilePicFile] = useState(null);
     const file = e.target.files[0];
     if (file) {
       setProfilePicPreview(URL.createObjectURL(file));
-      setProfilePicFile(file)
+      setProfilePicFile(file);
       setValue("profilePic", e.target.files); // save FileList for FormData
     }
   };
@@ -71,7 +77,6 @@ const [profilePicFile, setProfilePicFile] = useState(null);
       const formData = new FormData();
 
       // Basic fields
-      console.log(data)
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("username", data.username);
@@ -90,22 +95,19 @@ const [profilePicFile, setProfilePicFile] = useState(null);
       if (profilePicFile) {
         formData.append("profilePic", profilePicFile);
       }
-      console.log(data.profilePic)
       if (data.resume && data.resume[0]) {
         formData.append("resume", data.resume[0]);
       }
-      console.log(data.resume)
 
       // Dispatch Redux action
       const response = await dispatch(asyncUserProfileUpdate(formData));
-      console.log(response)
       if (response.sucess) {
         toast.success(response.message);
       } else {
         toast.error(response.message);
       }
     } catch (error) {
-      toast.error("Something went wrong while updating profile.", error);
+      toast.error("Something went wrong while updating profile.");
       console.error(error);
     }
   };
@@ -148,96 +150,116 @@ const [profilePicFile, setProfilePicFile] = useState(null);
           >
             {/* Full Name */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Full Name
-              </label>
+              <label className="block text-sm font-medium mb-1">Full Name</label>
               <input
-                {...register("name")}
+                {...register("name", {
+                  required: "Full name is required",
+                  minLength: { value: 3, message: "Name must be at least 3 characters" },
+                })}
                 type="text"
                 placeholder="Enter Full Name"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
             </div>
 
             {/* Email */}
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
-                {...register("email")}
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Enter a valid email address",
+                  },
+                })}
                 type="email"
                 placeholder="example@gmail.com"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
 
             {/* Username */}
             <div>
               <label className="block text-sm font-medium mb-1">Username</label>
               <input
-                {...register("username")}
+                {...register("username", {
+                  required: "Username is required",
+                  minLength: { value: 4, message: "Username must be at least 4 characters" },
+                })}
                 type="text"
-                placeholder="enter username"
+                placeholder="Enter username"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.username && (
+                <p className="text-red-500 text-sm">{errors.username.message}</p>
+              )}
             </div>
 
             {/* Phone */}
             <div>
               <label className="block text-sm font-medium mb-1">Phone</label>
               <input
-                {...register("phone")}
+                {...register("phone", {
+                  required: "Phone number is required",
+                  pattern: { value: /^[0-9]{10}$/, message: "Phone must be exactly 10 digits" },
+                })}
                 type="text"
                 placeholder="xxxxxxxxxx"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
 
             {/* City Preference */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                City Preference
-              </label>
+              <label className="block text-sm font-medium mb-1">City Preference</label>
               <input
-                {...register("CityPreference")}
+                {...register("CityPreference", { required: "City preference is required" })}
                 type="text"
                 placeholder="Enter City Preference"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.CityPreference && (
+                <p className="text-red-500 text-sm">{errors.CityPreference.message}</p>
+              )}
             </div>
 
             {/* Job Preference */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Job Preference
-              </label>
+              <label className="block text-sm font-medium mb-1">Job Preference</label>
               <input
-                {...register("JobPreference")}
+                {...register("JobPreference", { required: "Job preference is required" })}
                 type="text"
                 placeholder="Enter Job Preference"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.JobPreference && (
+                <p className="text-red-500 text-sm">{errors.JobPreference.message}</p>
+              )}
             </div>
 
             {/* Job Title */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Job Title
-              </label>
+              <label className="block text-sm font-medium mb-1">Job Title</label>
               <input
-                {...register("JobTitle")}
+                {...register("JobTitle", { required: "Job title is required" })}
                 type="text"
                 placeholder="Job Title"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.JobTitle && (
+                <p className="text-red-500 text-sm">{errors.JobTitle.message}</p>
+              )}
             </div>
 
             {/* Experience */}
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Experience
-              </label>
+              <label className="block text-sm font-medium mb-1">Experience</label>
               <select
-                {...register("Experience")}
+                {...register("Experience", { required: "Experience selection is required" })}
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               >
                 <option value="">Select</option>
@@ -248,6 +270,9 @@ const [profilePicFile, setProfilePicFile] = useState(null);
                 <option>3 Years +</option>
                 <option>5+ Years</option>
               </select>
+              {errors.Experience && (
+                <p className="text-red-500 text-sm">{errors.Experience.message}</p>
+              )}
             </div>
 
             {/* Skills */}
@@ -294,10 +319,22 @@ const [profilePicFile, setProfilePicFile] = useState(null);
                 </a>
               )}
               <input
-                {...register("resume")}
+                {...register("resume", {
+                  validate: {
+                    fileType: (files) =>
+                      !files[0] ||
+                      ["application/pdf", "application/msword"].includes(files[0].type) ||
+                      "Only PDF or DOC allowed",
+                    fileSize: (files) =>
+                      !files[0] || files[0].size <= 2 * 1024 * 1024 || "Max size is 2MB",
+                  },
+                })}
                 type="file"
                 className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
+              {errors.resume && (
+                <p className="text-red-500 text-sm">{errors.resume.message}</p>
+              )}
             </div>
 
             {/* Save Button */}

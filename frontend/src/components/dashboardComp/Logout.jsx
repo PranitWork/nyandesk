@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { asynclogoutUser } from '../../store/actions/userActions';
 import { toast } from 'react-toastify';
@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const Logout = () => {
   const dispatch = useDispatch();
   const navigate= useNavigate();
+    const userDetails = useSelector((state)=>state.userReducer.users);
+
  const userLogOut = async () => {
   const response = await dispatch(asynclogoutUser());
   if (response.success) {
@@ -21,17 +23,18 @@ const Logout = () => {
     navigate("/dashboard");
   }
   return (
+    
      <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-full max-w-md text-center">
         {/* Profile Image */}
         <div className="flex flex-col items-center">
           <img
-            src="https://via.placeholder.com/100"
+            src={userDetails.profilePic}
             alt="User Profile"
             className="w-24 h-24 rounded-full border-4 border-gray-200 shadow-md"
           />
           <h2 className="mt-4 text-xl font-semibold text-gray-800">
-            John Doe
+            {userDetails.name}
           </h2>
         </div>
 

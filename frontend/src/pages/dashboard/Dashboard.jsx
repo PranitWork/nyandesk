@@ -5,6 +5,7 @@ import LeftSidePannel from "../../components/dashboardComp/LeftSidePannel";
 import JobsInfo from "../../components/dashboardComp/JobsInfo";
 import UserProfile from "../../components/dashboardComp/UserProfile";
 import Logout from "../../components/dashboardComp/Logout";
+import InterviewPage from "./InterviewPage";
 
 const Dashboard = () => {
   const [activeItem, setActiveItem] = useState("Dashboard");
@@ -17,8 +18,8 @@ const Dashboard = () => {
         return <div className="p-4">dashboard</div>;
       case "Jobs":
         return <JobsInfo />;
-      case "Chat With AI":
-        return <div className="p-4">chat with ai</div>;
+      case "Ai Interview":
+        return <InterviewPage/>;
       case "Profile":
         return <UserProfile />;
       case "Logout":

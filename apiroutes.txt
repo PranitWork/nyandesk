@@ -12,5 +12,6 @@ PATCH = http://localhost:4000/api/user/profile
 
 get = http://localhost:4000/api/jobs/all
 get = http://localhost:4000/api/jobs/recommend
+POST = https://localhost:4000/api/jobs/search
 
 POST = http://localhost:4000/api/resume/upload

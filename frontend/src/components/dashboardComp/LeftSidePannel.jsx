@@ -9,7 +9,7 @@ const LeftSidePannel = ({ activeItem, setActiveItem }) => {
     { label: "Dashboard" },
     { label: "ATS Checker" },
     { label: "Jobs" },
-    { label: "Chat With AI" },
+    { label: "Ai Interview" },
   ];
 
   const bottomItems = [{ label: "Profile" }, { label: "Logout", danger: true }];
@@ -24,13 +24,13 @@ const LeftSidePannel = ({ activeItem, setActiveItem }) => {
       {isOpen && (
         <div
           className="
-             fixed top-[55px] left-0 h-[calc(103vh-64px)]   // 👈 sidebar starts below header
+             fixed top-[55px] left-0 h-[calc(103vh-64px)] 
     sm:relative sm:top-0 sm:h-auto
     w-64 sm:w-1/4 md:w-1/5
     flex flex-col justify-between 
     bg-white shadow-md py-4 
     transition-all duration-300
-    z-40
+    z-40  
           "
         >
           {/* Collapse button */}

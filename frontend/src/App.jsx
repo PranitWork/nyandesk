@@ -7,7 +7,8 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(asyncCurrentUser())
+    dispatch(asyncCurrentUser());
+
   },[])
   return (
     <>

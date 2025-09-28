@@ -1,5 +1,20 @@
 import axios from "../../api/Config";
-import { loadUser,logoutuser } from "../reducers/userSlicer";
+import { loadJobs, loadUser,logoutuser, recommendJobs, searchJobs } from "../reducers/userSlicer";
+
+
+
+export const checkAuth = async () => {
+  try {
+    const response = await axios.get("/auth/me", {
+      withCredentials: true, // Important if you are using cookies
+    });
+    console.log(response)
+    return response.data.user; // returns user data
+  } catch (error) {
+    return null; // not authenticated
+  }
+};
+
 
 export const asyncCurrentUser = () => async (dispatch) => {
   try {
@@ -72,6 +87,8 @@ export const asynclogoutUser = ()=> async(dispatch)=>{
   }
 }
 
+
+
 export const asyncUserProfileUpdate = (formData) => async (dispatch) => {
   try {
     const { data } = await axios.patch(
@@ -93,6 +110,96 @@ export const asyncUserProfileUpdate = (formData) => async (dispatch) => {
       sucess: false,
       message:
         error.data?.message || "Error while updating profile",
+    };
+  }
+};
+
+
+export const asyncAtsChecker =(formData)=>async (dispatch)=>{
+  try{
+    const {data} = await axios.post("/resume/upload",formData,{
+      headers:{
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials:true,
+    });
+    dispatch(loadUser(data.user));
+     return {
+      success: true,
+      data, 
+    };
+  }catch(err){
+    return {
+      sucess:false,
+      message:err.data?.message || "cant upload the resume try agian",
+    }
+  }
+}
+
+export const asyncGetAllJobs = (page = 1, limit = 50) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(`/jobs/all?page=${page}&limit=${limit}`, {
+      withCredentials: true,
+    });
+    await dispatch(loadJobs(data)); // update redux state
+    return {
+      success: true,
+      data: data.results,
+      page: data.page,
+      hasNextPage: data.hasNextPage,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.response?.data?.msg || "No data found",
+    };
+  }
+};
+
+export const asyncRecommendJobs = (page = 1, limit = 50) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(`/jobs/recommend?page=${page}&limit=${limit}`, {
+      withCredentials: true,
+    });
+    await dispatch(recommendJobs(data));
+    return {
+      success: true,
+      data: data.results,
+      page: data.page,
+      hasNextPage: data.hasNextPage,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: err.response?.data?.error || "No data found",
+    };
+  }
+};
+
+export const asyncSearchjob = (formData, page = 1, limit = 50) => async (dispatch) => {
+  try {
+    const body = { ...formData, page, limit }; // include page & limit in body
+    const { data } = await axios.post(`/jobs/search`, body, { withCredentials: true });
+
+    dispatch(searchJobs(data));
+
+    if (data?.results?.length > 0) {
+      return {
+        success: true,
+        data: data.results,
+        page: data.page,
+        hasNextPage: data.hasNextPage,
+      };
+    } else {
+      return {
+        success: false,
+        message: "No jobs found for this search",
+      };
+    }
+  } catch (err) {
+    return {
+      success: false,
+      message: err.response?.data?.msg || "Something went wrong while searching jobs",
     };
   }
 };

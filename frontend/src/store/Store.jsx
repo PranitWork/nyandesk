@@ -5,6 +5,6 @@ import userSlice from "./reducers/userSlicer"
 
 export const Store = configureStore({
     reducer:{
-        userReduce: userSlice,
+        userReducer: userSlice,
     },
 });

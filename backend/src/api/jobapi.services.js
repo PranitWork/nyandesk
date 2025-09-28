@@ -1,7 +1,7 @@
 // services/jobService.js
 const axios = require("axios");
 
-async function jobfetch({ query = "", location = "", page = 1, limit = 20 } = {}) {
+async function jobfetch({ query = "", location = "", page = 1, limit = 50 } = {}) {
   const baseUrl = "https://api.adzuna.com/v1/api/jobs/in/search";
   const appId = process.env.ADZUNA_APP_ID;
   const appKey = process.env.ADZUNA_APP_KEY;
