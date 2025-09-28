@@ -61,10 +61,12 @@ const JobsInfo = () => {
         response = await dispatch(asyncGetAllJobs(page, jobsPerPage));
       } else if (tab === "recommended") {
         response = await dispatch(asyncRecommendJobs(page, jobsPerPage));
+        console.log("Recommended Jobs Response:", response);
       } else if (tab === "search") {
         response = await dispatch(
           asyncSearchjob(formData || searchFormData, page, jobsPerPage)
         );
+        console.log("Search Jobs Response:", response)
       }
 
       if (response.success) {

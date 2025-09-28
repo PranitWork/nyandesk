@@ -20,4 +20,5 @@ const InterviewSchema = new mongoose.Schema({
 });
 
 const InterviewModel = mongoose.model("Interview", InterviewSchema);
+
 module.exports = InterviewModel;

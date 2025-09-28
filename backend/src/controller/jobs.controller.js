@@ -40,7 +40,7 @@ async function recommendJobs(req, res) {
 
     const page = parsePage(req.query.page);
     const jobs = await jobRecommendation(user, { page });
-
+    console.log(jobs)
     res.status(200).json({
       success: true,
       page,
@@ -49,6 +49,7 @@ async function recommendJobs(req, res) {
       hasNextPage: jobs.length === 50,
       nextPage: jobs.length === 50 ? page + 1 : null,
     });
+    console.log(jobs)
   } catch (err) {
     console.error("Error recommending jobs:", err);
     res.status(500).json({ error: "Failed to fetch job recommendations" });

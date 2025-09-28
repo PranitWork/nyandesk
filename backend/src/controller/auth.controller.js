@@ -58,7 +58,6 @@ async function Login(req, res){
     if (existingToken) {
       try {
         jwt.verify(existingToken, process.env.JWT_SECRET);
-        return res.status(200).json({ message: "User already logged in" });
       } catch {
         return res.status(400).json({ message: "Invalid token, please log in again" });
     }

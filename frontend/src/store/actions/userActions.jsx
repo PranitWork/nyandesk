@@ -164,7 +164,7 @@ export const asyncRecommendJobs = (page = 1, limit = 50) => async (dispatch) => 
     await dispatch(recommendJobs(data));
     return {
       success: true,
-      data: data.results,
+      data: data.results,  // array of jobs
       page: data.page,
       hasNextPage: data.hasNextPage,
     };
@@ -175,6 +175,7 @@ export const asyncRecommendJobs = (page = 1, limit = 50) => async (dispatch) => 
     };
   }
 };
+
 
 export const asyncSearchjob = (formData, page = 1, limit = 50) => async (dispatch) => {
   try {
