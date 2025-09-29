@@ -41,39 +41,41 @@ function computeScore(user, job) {
 }
 
 // ✅ Main Recommendation Function
-async function jobRecommendation(user, { page = 1, limit = 100 } = {}) {
-  const cacheKey = `${user._id}-${page}-${limit}`;
-  const cached = cache.get(cacheKey);
-  if (cached) return cached;
-
-  // Build query using JobPreference + Experience
-  const query = [user.JobPreference, user.Experience ? `${user.Experience} years` : ""]
-    .filter(Boolean)
-    .join(" ");
+async function jobRecommendation(user, { page = 1, limit = 20 } = {}) {
+  // 🔹 Only use JobPreference for API query (no years)
+  const query = user.JobPreference || "";
   const location = user.CityPreference || "";
 
-  const results = [];
-  const pagesToFetch = Math.ceil(limit / 50);
+  let results = [];
+  // 🔹 Fetch at least 2 pages to get enough jobs
+  const pagesToFetch = Math.max(2, Math.ceil((page * limit) / 50));
 
-  for (let i = 0; i < pagesToFetch; i++) {
-    const currentPage = page + i;
-    const response = await jobfetch({ query, location, page: currentPage });
-    const jobs = response?.results || [];
-
+  for (let i = 1; i <= pagesToFetch; i++) {
+    const jobs = await jobfetch({ query, location, page: i });
     if (!jobs.length) break;
     results.push(...jobs);
   }
 
-  // Compute relevance and sort
+  // 🔹 Score jobs
   const scored = results
     .map((job) => ({ ...job, relevance: computeScore(user, job) }))
     .sort((a, b) => b.relevance - a.relevance);
 
-  const pagedJobs = scored.slice(0, limit);
+  // 🔹 If all relevance = 0 (no matches), still return jobs (fallback)
+  let finalResults = scored;
+  if (scored.every((job) => job.relevance === 0)) {
+    console.warn("⚠️ No strong matches found, falling back to raw jobs");
+    finalResults = results;
+  }
 
-  if (pagedJobs.length) cache.set(cacheKey, pagedJobs);
+  // 🔹 Proper pagination
+  const start = (page - 1) * limit;
+  const end = page * limit;
 
-  return pagedJobs;
+  return finalResults.slice(start, end);
 }
+
+
+
 
 module.exports = { jobRecommendation };

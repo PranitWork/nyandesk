@@ -15,9 +15,8 @@ async function uploadAndParseAndGenerateATS(req, res) {
 
     // 2️⃣ Parse resume using Affinda
     const parsed = await parseResume(resumeUrl);
-    console.log("Parsed Resume:", parsed);
     const data = parsed.data || {};
-    console.log("Parsed Data:", data);
+
     // 3️⃣ Build resumeData object
     const resumeData = {
       rawText: data.rawText || "",
@@ -35,9 +34,8 @@ async function uploadAndParseAndGenerateATS(req, res) {
 
     // 4️⃣ Generate ATS score
     const jobKeywords = req.body.jobKeywords || req.user.JobPreference?.split(" ") || [];
-    console.log("Job Keywords:", jobKeywords);
     const atsResult = calculateATSSCore(resumeData, jobKeywords);
-    console.log("ATS Result:", atsResult);
+
     // 5️⃣ Save everything in DB
     const user = await userModel.findByIdAndUpdate(
       userId,

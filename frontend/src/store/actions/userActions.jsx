@@ -8,7 +8,6 @@ export const checkAuth = async () => {
     const response = await axios.get("/auth/me", {
       withCredentials: true, // Important if you are using cookies
     });
-    console.log(response)
     return response.data.user; // returns user data
   } catch (error) {
     return null; // not authenticated
@@ -25,7 +24,6 @@ export const asyncCurrentUser = () => async (dispatch) => {
       dispatch(loadUser(response.data.user));
       return { sucess: true, message: response.data.message };
     } else {
-      console.log("No user data found");
       return { sucess: false, message: response.data.message };
     }
   } catch (err) {
@@ -44,7 +42,6 @@ export const asyncregisterUser = (data) => async (dispatch) => {
     dispatch(asyncCurrentUser());
     return { sucess: true, message: response.data.message };
   } catch (err) {
-    console.log(err)
     const backendMsg =
       err.response?.data?.message || err.response?.data?.msg || err.message;
     return { sucess: false, message: backendMsg };
@@ -115,26 +112,33 @@ export const asyncUserProfileUpdate = (formData) => async (dispatch) => {
 };
 
 
-export const asyncAtsChecker =(formData)=>async (dispatch)=>{
-  try{
-    const {data} = await axios.post("/resume/upload",formData,{
-      headers:{
+export const asyncAtsChecker = (formData) => async (dispatch) => {
+  try {
+    const { data } = await axios.post("/resume/upload", formData, {
+      headers: {
         "Content-Type": "multipart/form-data",
       },
-      withCredentials:true,
+      withCredentials: true,
     });
-    dispatch(loadUser(data.user));
-     return {
-      success: true,
-      data, 
-    };
-  }catch(err){
-    return {
-      sucess:false,
-      message:err.data?.message || "cant upload the resume try agian",
+
+    // Assuming your backend returns { user: {...}, ... }
+    if (data.user) {
+      dispatch(loadUser(data.user));
     }
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (err) {
+    console.error("Resume upload error:", err.response?.data || err.message);
+    return {
+      success: false, // ✅ fixed spelling
+      message: err.response?.data?.message || "Can't upload the resume, try again",
+    };
   }
-}
+};
+
 
 export const asyncGetAllJobs = (page = 1, limit = 50) => async (dispatch) => {
   try {

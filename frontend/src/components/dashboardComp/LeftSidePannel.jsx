@@ -6,10 +6,8 @@ const LeftSidePannel = ({ activeItem, setActiveItem }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const menuItems = [
-    { label: "Dashboard" },
     { label: "ATS Checker" },
     { label: "Jobs" },
-    { label: "Ai Interview" },
   ];
 
   const bottomItems = [{ label: "Profile" }, { label: "Logout", danger: true }];
