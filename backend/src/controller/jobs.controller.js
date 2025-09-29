@@ -43,7 +43,6 @@ async function recommendJobs(req, res) {
     const page = parsePage(req.query.page);
     const limit = parseInt(req.query.limit, 10) || 20;
     const jobs = await jobRecommendation(user, { page, limit });
-    console.log("Recommended jobs:", jobs);
     res.status(200).json({
       success: true,
       page,
