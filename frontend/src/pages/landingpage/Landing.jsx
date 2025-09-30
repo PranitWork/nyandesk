@@ -27,9 +27,9 @@ const Landing = () => {
           </Link>
         </div>
 
-        <div className="overlays w-full md:w-[80%] rounded-t-[20px] overflow-hidden pt-5 border-white border-4 bg-[#f5f5f56e] flex justify-center mt-5">
+        <div className="overlays w-full md:w-[80%] md:rounded-t-[20px] overflow-hidden md:pt-5 border-white border-4 bg-[#f5f5f56e] flex justify-center mt-5">
           <img
-            className="w-[95%] rounded-[20px] object-cover"
+            className=" w-full md:w-[95%] md:rounded-[20px] object-cover"
             src="/Images/herosection/dashboard.png"
             alt="Dashboard"
           />
