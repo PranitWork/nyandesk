@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Footer from "../../components/landingComp/Footer";
 import Navigation from "../../components/landingComp/Navigation";
 import Pricing from "../../components/landingComp/Pricing";
@@ -18,12 +19,12 @@ const Landing = () => {
         </p>
 
         <div className="btns flex mt-5 md:flex-row items-center">
-          <button className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
+          <Link to="/login" className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
             Free Trial
-          </button>
-          <button className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
+          </Link>
+          <Link to="/pricing" className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
             See Plans
-          </button>
+          </Link>
         </div>
 
         <div className="overlays w-full md:w-[80%] rounded-t-[20px] overflow-hidden pt-5 border-white border-4 bg-[#f5f5f56e] flex justify-center mt-5">

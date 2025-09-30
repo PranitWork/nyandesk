@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { asyncloginUser } from "../store/actions/userActions";
 import { toast } from "react-toastify";
 
@@ -52,9 +52,9 @@ const Login = () => {
 
           <p className="mt-4 text-sm text-gray-600">
             I Don’t Have An Account.{" "}
-            <a href="/register" className="text-black cursor-pointer font-medium underline">
+            <Link to="/register" className="text-black cursor-pointer font-medium underline">
               Signup
-            </a>
+            </Link>
           </p>
         </form>
       </div>
