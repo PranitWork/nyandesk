@@ -36,6 +36,9 @@ async function Register(req, res) {
 
     res.cookie("token", token, {
       httpOnly: true,
+      secure: true,
+      sameSite: "None",
+      maxAge: 60 * 60 * 1000, // 1h
     });
 
     return res.status(201).json({
@@ -88,8 +91,8 @@ async function Login(req, res){
     // 6️⃣ Send cookie & response
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       maxAge: 60 * 60 * 1000, // 1h
     });
 
@@ -111,8 +114,8 @@ async function LogOut(req, res) {
     // clear the cookie in browser
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false,
-      sameSite: "lax",
+      secure: true,
+      sameSite: "None",
     });
 
     return res.status(200).json({ message: "User logged out successfully" });
