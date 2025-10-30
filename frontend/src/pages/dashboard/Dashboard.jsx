@@ -20,7 +20,7 @@ const Dashboard = () => {
       case "Logout":
         return <Logout/>;
       default:
-        return <JobsInfo />;
+        return <Atschecker />;
     }
   };
 
