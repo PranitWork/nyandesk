@@ -46,13 +46,13 @@ function JobCard({ data, onViewMore }) {
             href={data.redirect_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-blue-600 cursor-pointer text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700"
+            className="bg-blue-600 whitespace-nowrap cursor-pointer text-white text-xs px-3 py-1.5 rounded-lg hover:bg-blue-700"
           >
             Apply Job
           </a>
           <button
             onClick={() => onViewMore(data)}
-            className="bg-gray-100 cursor-pointer text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-200"
+            className="bg-gray-100 whitespace-nowrap cursor-pointer text-gray-700 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-200"
           >
             View More Info
           </button>

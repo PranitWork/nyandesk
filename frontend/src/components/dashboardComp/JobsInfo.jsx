@@ -177,7 +177,7 @@ const JobsInfo = () => {
       </div>
 
       {/* Jobs List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:gird-cols-3 lg:grid-cols-3 gap-4 px-2">
         {displayedJobs.length > 0 ? (
           displayedJobs.map((job, index) => (
             <JobCard
@@ -189,19 +189,19 @@ const JobsInfo = () => {
         ) : (
           <div className="col-span-full text-center text-gray-500 text-sm">
             {activeTab === "recommended" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
                 {Array.from({ length: 20 }).map((_, index) => (
                   <Loader key={index} />
                 ))}
               </div>
             ) : activeTab === "search" ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
                 {Array.from({ length: 20 }).map((_, index) => (
                   <Loader key={index} />
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
                 {Array.from({ length: 20 }).map((_, index) => (
                   <Loader key={index} />
                 ))}

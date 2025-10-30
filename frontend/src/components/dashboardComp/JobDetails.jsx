@@ -28,7 +28,7 @@ import React from "react";
       </div>
 
       {/* Job Description */}
-      <div className="mb-6">
+      <div className="mb-6 overflow-y-scroll">
         <h2 className="text-xl font-semibold text-gray-700 mb-2">Job Description</h2>
         <p className="text-gray-600 whitespace-pre-line">{job.description}</p>
       </div>

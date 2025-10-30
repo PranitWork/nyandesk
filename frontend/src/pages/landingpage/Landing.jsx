@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Footer from "../../components/landingComp/Footer";
 import Navigation from "../../components/landingComp/Navigation";
-import Pricing from "../../components/landingComp/Pricing";
+// import Pricing from "../../components/landingComp/Pricing";
 
 const Landing = () => {
   return (
@@ -19,12 +19,10 @@ const Landing = () => {
         </p>
 
         <div className="btns flex mt-5 md:flex-row items-center">
-          <Link to="/login" className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
-            Free Trial
+          <Link to="/register" className="py-4 px-10 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[15px]">
+            Demo
           </Link>
-          <Link to="/pricing" className="py-2 px-5 bg-black text-white font-bold mx-2 my-2 rounded-[10px] text-[13px]">
-            See Plans
-          </Link>
+        
         </div>
 
         <div className="overlays w-full md:w-[80%] md:rounded-t-[20px] overflow-hidden md:pt-5 border-white border-4 bg-[#f5f5f56e] flex justify-center mt-5">
@@ -36,7 +34,7 @@ const Landing = () => {
         </div>
       </section>
 
-      <Pricing />
+      {/* <Pricing /> */}
       <Footer />
     </main>
   );

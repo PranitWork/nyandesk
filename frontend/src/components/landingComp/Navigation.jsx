@@ -19,21 +19,7 @@ const Navigation = () => {
               Home
             </NavLink>
           </li>
-          <li>
-            <NavLink to="/features" className="text-white hover:text-gray-300">
-              Features
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/pricing" className="text-white hover:text-gray-300">
-              Pricing
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/contact" className="text-white hover:text-gray-300">
-              Contact
-            </NavLink>
-          </li>
+      
           <li>
             <NavLink to="/register" className="text-white hover:text-gray-300">
               Sign Up
